@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from kpi import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^themetic_list/$',views.Themetics_list.as_view()),
+    url(r'^indicators_list/$',views.Indicators_list.as_view()),
+    url(r'^financialyears_list/$',views.Financial_year_list.as_view()),
+    url(r'^themetic_indicator_list/$',views.Themetic_Indicator_list.as_view()),
+    url(r'^indicator_targetsdetails/$',views.Indicator_Target_details.as_view()),
+
+
 ]
+

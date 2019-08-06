@@ -15,7 +15,7 @@ class BaseContent(models.Model):
 # Create your models here.
 class Themetics(BaseContent):
     themeticname=models.CharField(max_length=50,unique=True)
-    code=models.CharField(max_length=20)
+    code=models.CharField(max_length=20,unique=True)
 
     class Meta:
         db_table="themetics"
@@ -56,7 +56,7 @@ QUARTER=(
     (4,"Quarter 4")
 )
 class IndicatorTargets(BaseContent):
-    indicator=models.ForeignKey(Indicators,related_name="indicator",on_delete=models.CASCADE)
+    indicator=models.ForeignKey(Indicators,related_name="indicator_target",on_delete=models.CASCADE)
     financialyear=models.ForeignKey(FinancialYears,related_name="finance_year",on_delete=models.CASCADE)
     quarter=models.IntegerField(choices=QUARTER,default=1)
     target=models.PositiveIntegerField()
@@ -67,6 +67,9 @@ class IndicatorTargets(BaseContent):
     
     def __str__(self):
         return str(self.indicator)
+
+
+    
 
 
 
