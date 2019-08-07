@@ -18,11 +18,15 @@ from django.contrib import admin
 from kpi import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^themetic_list/$',views.Themetics_list.as_view()),
-    url(r'^indicators_list/$',views.Indicators_list.as_view()),
-    url(r'^financialyears_list/$',views.Financial_year_list.as_view()),
-    url(r'^themetic_indicator_list/$',views.Themetic_Indicator_list.as_view()),
-    url(r'^indicator_targetsdetails/$',views.Indicator_Target_details.as_view()),
+    url(r'^themetic-list/$',views.Themetics_list.as_view()),
+    url(r'^themetic-list/(?P<themetic_id>[0-9]+)/$',views.Themetic_Update_Delete.as_view()),
+    url(r'^indicators-list/$',views.Indicators_list.as_view()),
+    url(r'^indicators-list/(?P<indicator_id>[0-9]+)/$',views.Indicator_Update_Delete.as_view()),
+    url(r'^financialyears-list/$',views.Financial_year_list.as_view()),
+    url(r'^financialyears-list/(?P<year_id>[0-9]+)/$',views.Financial_year_list.as_view()),
+    url(r'^themetic-indicator-list/$',views.Themetic_Indicator_list.as_view()),
+    url(r'^indicator-targetsdetails/$',views.Indicator_Target_details.as_view()),
+    url(r'^indicatortarget-list/$',views.IndicatorTargetList.as_view()),
 
 
 ]
