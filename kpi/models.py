@@ -70,9 +70,22 @@ class IndicatorTargets(BaseContent):
     quarter = models.IntegerField(choices=QUARTER, default=1)
     target = models.PositiveIntegerField()
 
+
     class Meta:
         db_table = "indicatortargets"
         verbose_name_plural = "IndicatorTargets"
 
     def __str__(self):
         return str(self.indicator)
+    
+class IndicatorTargetAchievements(BaseContent):
+    achievedtarget = models.OneToOneField(IndicatorTargets,primary_key=True,related_name="target_achieved")
+
+
+    class Meta:
+        db_table="indicatortargetachievements"
+    
+    def __str__(self):
+        return str(self.achievedtarget)
+
+

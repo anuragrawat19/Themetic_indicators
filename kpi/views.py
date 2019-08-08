@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import status
 from .models import *
 from .serializer import (ThemeticSerializer, IndicatorSerializer, Themetic_Indicators_DetailSerializer,
-                         Indicator_Target_Detail_Serializer, FinancialYearsSerializer,IndicatorTargetCoustomSerializer)
+                         Indicator_Target_Detail_Serializer, FinancialYearsSerializer, IndicatorTargetCoustomSerializer, IndicatorTargetAchievementSerializer)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
@@ -140,17 +140,58 @@ class Indicator_Target_details(APIView):
             return Response({"new {}  Indicators details created".format(serializer.data["indicatorname"])})
         else:
             return Response(serializer.errors)
-#---------------------------------------------------------------
+# ---------------------------------------------------------------
+
+
 class IndicatorTargetList(APIView):
-    def get(self,request):
-        IndicatorTargetList=IndicatorTargets.objects.all()
-        seriliazer_class=IndicatorTargetCoustomSerializer(IndicatorTargetList,many=True)
-        return Response({"Indicators Target List":seriliazer_class.data})
-    
-    def post(self,request):
-        IndicatorTargetList=IndicatorTargetCoustomSerializer(data=request.data)
+    def get(self, request):
+        IndicatorTargetList = IndicatorTargets.objects.all()
+        seriliazer_class = IndicatorTargetCoustomSerializer(
+            IndicatorTargetList, many=True)
+        return Response({"Indicators Target List": seriliazer_class.data})
+
+    def post(self, request):
+        IndicatorTargetList = IndicatorTargetCoustomSerializer(
+            data=request.data)
         if IndicatorTargetList.is_valid(raise_exception=True):
             IndicatorTargetList.save()
-            return Response({"status":"New Indicator target is created  "},status=status.HTTP_201_CREATED )
+            return Response({"status": "New Indicator target is created  "}, status=status.HTTP_201_CREATED)
         else:
             return Response(IndicatorTargetList.ValidationError)
+
+# ---------------------------------------------------------------------
+
+
+class AchievedTargets(APIView):
+    def get(self, request):
+        achieved_targets = IndicatorTargetAchievements.objects.all()
+        serializer_class = IndicatorTargetAchievementSerializer(
+            achieved_targets, many=True)
+        return Response({"achieved targets": serializer_class.data})
+
+    def post(self, request):
+        serializer_class = IndicatorTargetAchievementSerializer(
+            data=request.data)
+        if serializer_class.is_valid():
+            serializer_class.save()
+            return Response({" status": " new indicator target is achived"})
+        else:
+            return Response(serializer_class.errors)
+
+   
+    def put(self, request, achieved_target_id):
+        achieved_targets = IndicatorTargetAchievements.objects.get(achievedtarget=achieved_target_id)
+        serializer_class = IndicatorTargetAchievementSerializer(achieved_targets, request.data)
+        if serializer_class.is_valid():
+            serializer_class.save()
+            return Response("existing target with id {} modified".format(achieved_target_id))
+        else:
+            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, achieved_target_id):
+        try:
+            achieved_targets = IndicatorTargetAchievements.objects.get(achievedtarget=achieved_target_id)
+            achieved_targets.delete()
+            return Response({"achieved target  with id {} is deleted".format(achieved_target_id)})
+        except IndicatorTargetAchievements.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

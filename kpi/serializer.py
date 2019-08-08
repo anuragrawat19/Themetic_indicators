@@ -1,7 +1,7 @@
 '''Wrting a seriliazers for the models so that state of 
 the model objects can be converted into a native python datatypes like json,xml '''
 from rest_framework import serializers
-from .models import (Themetics,Indicators,FinancialYears,IndicatorTargets)
+from .models import (Themetics,Indicators,FinancialYears,IndicatorTargets,IndicatorTargetAchievements)
 
 class ThemeticSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,5 +74,45 @@ class IndicatorTargetCoustomSerializer(serializers.Serializer):
         Indicators_id=Indicators.objects.get(id=indicators)
         year=FinancialYears.objects.get(year=year)
         return IndicatorTargets.objects.create(indicator=Indicators_id,financialyear=year,**validated_data)
+
+
+
+
+class IndicatorTargetAchievementSerializer(serializers.Serializer):
+    themetic=serializers.SerializerMethodField("Themetic",read_only=True)
+    achievedtarget=serializers.PrimaryKeyRelatedField(read_only=True)
+    Indicator_target_name=serializers.SerializerMethodField("targetname",read_only=True)
+    year= serializers.SerializerMethodField("Year",read_only=True)
+    quarter = serializers.SerializerMethodField("Quarter",read_only=True)
+    target = serializers.SerializerMethodField("Target",read_only=True)
+    def targetname(self,obj):
+        return obj.achievedtarget.indicator.indicatorname
+    
+    def Target(self,obj):
+        return obj.achievedtarget.target
+    
+    def Themetic(self,obj):
+        return obj.achievedtarget.indicator.themetic.themeticname
+    
+    def Year (self,obj):
+        return obj.achievedtarget.financialyear.year
+    
+    def Quarter(self,obj):
+        return obj.achievedtarget.quarter
+
+    def create(self,validated_data):
+        Indicator_Target=validated_data.pop("achievedtarget")
+        target_instance=IndicatorTargets.objects.get(id=Indicator_Target)
+        return IndicatorTargetAchievements.objects.create(achievedtarget=target_instance)
+    
+    def update(self,instance,validated_data):
+        instance.achievedtarget=validated_data.get("achievedtarget",instance.achievedtarget)
+        instance.save()
+        return instance
+
+    
+
+
+
 
 

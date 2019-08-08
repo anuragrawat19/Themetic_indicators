@@ -27,6 +27,10 @@ urlpatterns = [
     url(r'^themetic-indicator-list/$',views.Themetic_Indicator_list.as_view()),
     url(r'^indicator-targetsdetails/$',views.Indicator_Target_details.as_view()),
     url(r'^indicatortarget-list/$',views.IndicatorTargetList.as_view()),
+    url(r'^achievedtarget-list/$',views.AchievedTargets.as_view()),
+    url(r'^achievedtarget-list/(?P<achieved_target_id>[0-9]+)/$',views.AchievedTargets.as_view()),
+
+
 
 
 ]
