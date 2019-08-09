@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework import status
 from .models import *
 from .serializer import (ThemeticSerializer, IndicatorSerializer, Themetic_Indicators_DetailSerializer,
-                         Indicator_Target_Detail_Serializer, FinancialYearsSerializer, IndicatorTargetCoustomSerializer, IndicatorTargetAchievementSerializer)
+                         Indicator_Target_Detail_Serializer, FinancialYearsSerializer, IndicatorTargetCoustomSerializer, 
+                         IndicatorTargetAchievementSerializer,IndicatorTargetAchievementDeleteSerializer,Achieved_Target_Period_Serializer)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
@@ -170,7 +171,7 @@ class AchievedTargets(APIView):
         return Response({"achieved targets": serializer_class.data})
 
     def post(self, request):
-        serializer_class = IndicatorTargetAchievementSerializer(
+        serializer_class = IndicatorTargetAchievementDeleteSerializer(
             data=request.data)
         if serializer_class.is_valid():
             serializer_class.save()
@@ -178,10 +179,11 @@ class AchievedTargets(APIView):
         else:
             return Response(serializer_class.errors)
 
-   
     def put(self, request, achieved_target_id):
-        achieved_targets = IndicatorTargetAchievements.objects.get(achievedtarget=achieved_target_id)
-        serializer_class = IndicatorTargetAchievementSerializer(achieved_targets, request.data)
+        achieved_targets = IndicatorTargetAchievements.objects.get(
+            indicatortarget=achieved_target_id)
+        serializer_class = IndicatorTargetAchievementSerializer(
+            achieved_targets, request.data)
         if serializer_class.is_valid():
             serializer_class.save()
             return Response("existing target with id {} modified".format(achieved_target_id))
@@ -190,8 +192,28 @@ class AchievedTargets(APIView):
 
     def delete(self, request, achieved_target_id):
         try:
-            achieved_targets = IndicatorTargetAchievements.objects.get(achievedtarget=achieved_target_id)
+            achieved_targets = IndicatorTargetAchievements.objects.get(
+                indicatortarget=achieved_target_id)
             achieved_targets.delete()
             return Response({"achieved target  with id {} is deleted".format(achieved_target_id)})
         except IndicatorTargetAchievements.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class Year_Based_AchievedTarget(APIView):
+    def get(self,request,year):
+        year_base_achieved_target=IndicatorTargetAchievements.objects.filter(indicatortarget__financialyear__year=year)
+        if len(year_base_achieved_target)==0:
+            return Response({ "No targets achieved for this year" })
+        serializer_class=IndicatorTargetAchievementSerializer(year_base_achieved_target,many=True)
+        return Response(serializer_class.data)
+
+class AchievedTargets_period_info(APIView):
+    def get(self,request):
+        AchievedTargets= IndicatorTargetAchievements.objects.all()
+        serializer_class=Achieved_Target_Period_Serializer(AchievedTargets,many=True)
+        return Response(serializer_class.data)
+
+
+        
+        

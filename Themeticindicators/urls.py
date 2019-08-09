@@ -28,7 +28,10 @@ urlpatterns = [
     url(r'^indicator-targetsdetails/$',views.Indicator_Target_details.as_view()),
     url(r'^indicatortarget-list/$',views.IndicatorTargetList.as_view()),
     url(r'^achievedtarget-list/$',views.AchievedTargets.as_view()),
+    url(r'^achievedtarget-list/achieved-day-details/$', views.AchievedTargets_period_info.as_view()),
     url(r'^achievedtarget-list/(?P<achieved_target_id>[0-9]+)/$',views.AchievedTargets.as_view()),
+    url(r'^achievedtarget-list/search/(?P<year>[\w\s-]+)/$',views.Year_Based_AchievedTarget.as_view()),
+    
 
 
 

@@ -1,6 +1,7 @@
 '''Wrting a seriliazers for the models so that state of 
 the model objects can be converted into a native python datatypes like json,xml '''
-from rest_framework import serializers
+from rest_framework import serializers    
+from datetime import datetime as dt
 from .models import (Themetics,Indicators,FinancialYears,IndicatorTargets,IndicatorTargetAchievements)
 
 class ThemeticSerializer(serializers.ModelSerializer):
@@ -12,6 +13,7 @@ class IndicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model=Indicators
         fields="__all__"
+   
 
 class FinancialYearsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,39 +82,74 @@ class IndicatorTargetCoustomSerializer(serializers.Serializer):
 
 class IndicatorTargetAchievementSerializer(serializers.Serializer):
     themetic=serializers.SerializerMethodField("Themetic",read_only=True)
-    achievedtarget=serializers.PrimaryKeyRelatedField(read_only=True)
+    indicatortarget=serializers.PrimaryKeyRelatedField(read_only=True)
     Indicator_target_name=serializers.SerializerMethodField("targetname",read_only=True)
     year= serializers.SerializerMethodField("Year",read_only=True)
     quarter = serializers.SerializerMethodField("Quarter",read_only=True)
     target = serializers.SerializerMethodField("Target",read_only=True)
+    achievedtarget=serializers.IntegerField()
     def targetname(self,obj):
-        return obj.achievedtarget.indicator.indicatorname
+        return obj.indicatortarget.indicator.indicatorname
     
     def Target(self,obj):
-        return obj.achievedtarget.target
+        return obj.indicatortarget.target
     
     def Themetic(self,obj):
-        return obj.achievedtarget.indicator.themetic.themeticname
+        return obj.indicatortarget.indicator.themetic.themeticname
     
     def Year (self,obj):
-        return obj.achievedtarget.financialyear.year
+        return obj.indicatortarget.financialyear.year
     
     def Quarter(self,obj):
-        return obj.achievedtarget.quarter
-
-    def create(self,validated_data):
-        Indicator_Target=validated_data.pop("achievedtarget")
-        target_instance=IndicatorTargets.objects.get(id=Indicator_Target)
-        return IndicatorTargetAchievements.objects.create(achievedtarget=target_instance)
+        return obj.indicatortarget.quarter
     
     def update(self,instance,validated_data):
         instance.achievedtarget=validated_data.get("achievedtarget",instance.achievedtarget)
         instance.save()
         return instance
 
+class IndicatorTargetAchievementDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=IndicatorTargetAchievements
+        fields="__all__"
+
+    def create(self,validated_data):
+        Indicator_Target=validated_data.pop("indicatortarget")
+        target_instance=IndicatorTargets.objects.get(id=Indicator_Target)
+        return IndicatorTargetAchievements.objects.create(indicatortarget=target_instance,**validated_data)
+
+
+class Achieved_Target_Period_Serializer(serializers.ModelSerializer):
+    achievedtargetname =serializers.SerializerMethodField("IndicatorName")
+    day= serializers.SerializerMethodField("Date")
+    month=serializers.SerializerMethodField("Month")
+    target_goal=serializers.SerializerMethodField("Target_Goal")
+
+
+    def Date(self,obj):
+        created_date=obj.created
+        date=dt.date(created_date)
+        return date.strftime("%A")
+
+    def Month(self,obj):
+        created_date=obj.created
+        date=dt.date(created_date)
+        return date.strftime("%B")
+
+    def Target_Goal(self,obj):
+        return obj.indicatortarget.target
+        
+
+
+    def IndicatorName(self,obj):
+        return obj.indicatortarget.indicator.indicatorname
+    class Meta:
+
+        model=IndicatorTargetAchievements
+        fields=["indicatortarget","achievedtargetname","target_goal","achievedtarget","created","day","month"]
+        
+
+
+
     
-
-
-
-
-
+    
