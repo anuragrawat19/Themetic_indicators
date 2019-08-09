@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class BaseContent(models.Model):
@@ -79,7 +80,9 @@ class IndicatorTargets(BaseContent):
         return str(self.indicator)
     
 class IndicatorTargetAchievements(BaseContent):
-    achievedtarget = models.OneToOneField(IndicatorTargets,primary_key=True,related_name="target_achieved")
+    indicatortarget = models.OneToOneField(IndicatorTargets,primary_key=True,related_name="target_achieved")
+    achievedtarget = models.PositiveIntegerField()
+    
 
 
     class Meta:

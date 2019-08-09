@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'Themeticindicators.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'themetic',
+        'NAME': 'themetics',
         'USER':'cry_live',
         'PASSWORD':'cry_live',
         'PORT':'',
-        'LOCALHOST':'localhost'
+        'HOST':'localhost',
     }
 }
 
