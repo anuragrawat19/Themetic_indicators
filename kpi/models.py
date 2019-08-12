@@ -89,6 +89,6 @@ class IndicatorTargetAchievements(BaseContent):
         db_table="indicatortargetachievements"
     
     def __str__(self):
-        return str(self.indicatortarget)
+        return str(self.achievedtarget.indicator.indicatorname)
 
 

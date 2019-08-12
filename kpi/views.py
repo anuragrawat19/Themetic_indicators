@@ -1,34 +1,42 @@
-from django.shortcuts import render
+
 from rest_framework import status
 from .models import *
-from .serializer import (ThemeticSerializer, IndicatorSerializer, Themetic_Indicators_DetailSerializer,
-                         Indicator_Target_Detail_Serializer, FinancialYearsSerializer, IndicatorTargetCoustomSerializer, 
-                         IndicatorTargetAchievementSerializer,IndicatorTargetAchievementDeleteSerializer,Achieved_Target_Period_Serializer)
+from .serializer import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework import filters
+from rest_framework.decorators import api_view,throttle_classes
+from rest_framework.throttling import UserRateThrottle
+from rest_framework.permissions import IsAdminUser
 
-# Create your views here.
+"""Writing views for the each model so 
+   that the serialized fields can be displayed as per the requirement of the client 
+"""
+class Themetics_list(generics.ListCreateAPIView):
+    queryset=Themetics.objects.all()
+    serializer_class=ThemeticSerializer
 
-# view for the Themetics model
+    
 
 
-class Themetics_list(APIView):
-    '''list of all the themetics '''
+# class OncePerDay(UserRateThrottle):
+#     rate='1/day'
+# @throttle_classes([OncePerDay])
+# class Themetics_list(APIView): # view for the Themetics model
+#     '''list of all the themetics '''
 
-    def get(self, request):
-        themetic = Themetics.objects.all()
-        serializer_class = ThemeticSerializer(themetic, many=True)
-        return Response({"Themetic list": serializer_class.data})
+#     def get(self, request):
+#         themetic = Themetics.objects.all()
+#         serializer_class = ThemeticSerializer(themetic, many=True)
+#         return Response({"Themetic list": serializer_class.data})
 
-    def post(self, request):  # for adding a themetic
-        seriliazer_class = ThemeticSerializer(data=request.data)
-        if seriliazer_class.is_valid():
-            seriliazer_class.save()
-            return Response({"status": "Themetic {}   sucessfully created".format(seriliazer_class.data["themeticname"])}, status=201)
-        else:
-            return Response(seriliazer_class.errors)
+#     def post(self, request):  # for adding a themetic
+#         seriliazer_class = ThemeticSerializer(data=request.data)
+#         if seriliazer_class.is_valid():
+#             seriliazer_class.save()
+#             return Response({"status": "Themetic {}   sucessfully created".format(seriliazer_class.data["themeticname"])}, status=201)
+#         else:
+#             return Response(seriliazer_class.errors)
 
 
 class Themetic_Update_Delete(APIView):

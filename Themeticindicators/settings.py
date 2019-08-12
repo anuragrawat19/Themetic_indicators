@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'kpi',
     'django_extensions',
     'rest_framework',
+    'kpi',
+    'farmers',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -83,6 +84,8 @@ DATABASES = {
         'NAME': 'themetics',
         'USER':'cry_live',
         'PASSWORD':'cry_live',
+
+
         'PORT':'',
         'HOST':'localhost',
     }
@@ -95,7 +98,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5
+    'PAGE_SIZE': 3
 
 }
 

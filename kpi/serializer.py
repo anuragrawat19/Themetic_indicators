@@ -1,8 +1,10 @@
-'''Wrting a seriliazers for the models so that state of 
-the model objects can be converted into a native python datatypes like json,xml '''
 from rest_framework import serializers    
 from datetime import datetime as dt
 from .models import (Themetics,Indicators,FinancialYears,IndicatorTargets,IndicatorTargetAchievements)
+
+""" Creating a srializers for all the models as per the requirement of the data that has to display 
+    using serializer classes for serializng the data into the python native datatpes 
+ """
 
 class ThemeticSerializer(serializers.ModelSerializer):
     class Meta:
@@ -147,6 +149,8 @@ class Achieved_Target_Period_Serializer(serializers.ModelSerializer):
 
         model=IndicatorTargetAchievements
         fields=["indicatortarget","achievedtargetname","target_goal","achievedtarget","created","day","month"]
+
+
         
 
 
