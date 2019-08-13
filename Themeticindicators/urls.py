@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url,include
 from django.contrib import admin
 from kpi import views
 urlpatterns = [
@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^achievedtarget-list/achieved-day-details/$', views.AchievedTargets_period_info.as_view()),
     url(r'^achievedtarget-list/(?P<achieved_target_id>[0-9]+)/$',views.AchievedTargets.as_view()),
     url(r'^achievedtarget-list/search/(?P<year>[\w\s-]+)/$',views.Year_Based_AchievedTarget.as_view()),
+   
     
 
 

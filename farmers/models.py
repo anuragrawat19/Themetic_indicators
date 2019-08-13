@@ -38,7 +38,8 @@ class LandDetails(BaseContent):
         Farmers, related_name="theme", on_delete=models.CASCADE)
     location=models.CharField(max_length=50)
     landarea=models.IntegerField(db_column="Land area in acers")
-    annualproduction=models.IntegerField(db_column="Production in Tonnes")
+    annualproduction=models.DecimalField(db_column="Production in Tonnes",decimal_places=1,max_digits=10)
+    cropname=models.CharField(max_length=100,default="Wheat")
 
     def __str__(self):
         return str(self.farmer)

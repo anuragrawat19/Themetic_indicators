@@ -92,3 +92,18 @@ class IndicatorTargetAchievements(BaseContent):
         return str(self.achievedtarget.indicator.indicatorname)
 
 
+class Userslist(BaseContent):
+    user=models.CharField(max_length=30)
+    username=models.CharField(max_length=50)
+    firstname=models.CharField(max_length=50,null=True,blank=True)
+    lastname=models.CharField(max_length=50,null=True,blank=True)
+    roleid=models.IntegerField()
+    roletype=models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.user
+
+    class Meta:
+        db_table="users"
+
+
