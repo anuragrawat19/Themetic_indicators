@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'kpi',
     'farmers',
+    'import_export',
 ]
 
 MIDDLEWARE_CLASSES = [

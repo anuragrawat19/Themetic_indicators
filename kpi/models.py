@@ -89,7 +89,7 @@ class IndicatorTargetAchievements(BaseContent):
         db_table="indicatortargetachievements"
     
     def __str__(self):
-        return str(self.achievedtarget.indicator.indicatorname)
+        return str(self.indicatortarget.indicator.indicatorname)
 
 
 class Userslist(BaseContent):
@@ -107,3 +107,19 @@ class Userslist(BaseContent):
         db_table="users"
 
 
+class Urban(BaseContent):
+    country=models.CharField(max_length=50)
+    state=models.CharField(max_length=40)
+    district=models.CharField(max_length=60)
+    city=models.CharField(max_length=100)
+    area=models.CharField(max_length=100)
+    ward=models.CharField(max_length=30,null=True,blank=True)
+    mohala=models.CharField(max_length=50)
+    geographicalarea=models.CharField(max_length=60)
+
+    class Meta:
+        db_table="urban"
+    
+    
+    def __str__(self):
+        return self.state

@@ -48,3 +48,6 @@ class LandDetails(BaseContent):
         db_table="landdetails"
         ordering=["farmer"]
 
+
+
+
