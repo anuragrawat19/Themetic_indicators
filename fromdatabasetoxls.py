@@ -2,10 +2,8 @@ import xlrd,xlwt
 import csv
 from openpyxl import Workbook,load_workbook
 from xlutils.copy import copy
-from kpi.models import Themetics,Userslist,Indicators,IndicatorTargetAchievements,Urban
-from farmers.models import Farmers
-
-
+from kpi.models import Themetics,Userslist,Indicators,IndicatorTargetAchievements,Urban,IndicatorTargets
+from farmers.models import Farmers ,LandDetails
 
 """ Writing  a xlsv file  through importing a data from themetic model"""
 
@@ -110,7 +108,7 @@ path4 ="/home/mahiti/Desktop/xlsxfiles/farmers.xlsx"
 
 
 
-"""Writing the csv file inot the table using pandas library"""
+"""Writing the csv file inot the table using pandas libr"""
 
 def indicatorachievedtarget_csv(path5):
     with open(path5,"wb") as indicatorachievedtarget:
@@ -120,10 +118,10 @@ def indicatorachievedtarget_csv(path5):
         for target in targets:
             achievedtarget.writerow([target.active,target.created,target.modified,target.indicatortarget.indicator.themetic.themeticname,target.indicatortarget.indicator.indicatorname,target.indicatortarget.target,target.achievedtarget])
 path5="/home/mahiti/Desktop/xlsxfiles/achievedtarget.csv"
-indicatorachievedtarget_csv(path5)
 
 
-def exporting_urbancsv_to_datrabase(path6):
+
+def exporting_urbancsv_to_database(path6):
     with open(path6,"r") as urban_data:
         urban_data=csv.reader(urban_data)
         urban_data.next()
@@ -131,7 +129,70 @@ def exporting_urbancsv_to_datrabase(path6):
             Urban.objects.create(country=i[0],state=i[1],district=i[2],city=i[3],area=i[4],ward=i[5],mohala=i[6],geographicalarea=i[7])
 
 path6="/home/mahiti/Desktop/xlsxfiles/cry_Urban_data.csv"
-exporting_urbancsv_to_datrabase(path6)
+
+
+def models_to_xlsx(model,file_path,title):
+    wb=Workbook()
+    ws=wb.active
+    ws.title=title
+    fields_list=[ i.name for i in model._meta.fields]
+    ws.append(fields_list)
+    indicators_detail=model.objects.all()
+    for detail in indicators_detail:
+        indi_data=[]
+        instance=model.objects.get(pk=detail.pk).__dict__
+        for i in fields_list:
+            if i+"_id" in instance:
+                indi_data.append(instance[i+"_id"])
+            else:
+                indi_data.append(instance[i])
+        ws.append(indi_data)
+    wb.save(file_path)
+  
+
+file_path="/home/mahiti/Desktop/indicator_achieved_data_list.xlsx"
+
+
+def insert_to_database(model,field_dic):
+    model.objects.create(**field_dic)
+
+def xlsx_to_models(model,file_path,sheet_name):
+    from collections import OrderedDict
+    open_wb=load_workbook(file_path)
+    ws=open_wb[sheet_name]
+    row= ws.max_row
+    column=ws.max_column
+    fields_dic=OrderedDict()
+    fields_list=[str(ws.cell(row=1,column=i).value)for i in range(1,column+1)]
+    for i in fields_list:
+        fields_dic[i]=""
+    for r in range(2,row+1):
+        value=[]
+        for c in range(1,column+1):
+            cell=ws.cell(row=r,column=c)
+            value.append(str(cell.value))
+        
+        index=0
+        for i in fields_dic:
+            fields_dic[i]=value[index]
+            index+=1
+        insert_to_database(model,fields_dic)
+file_path="/home/mahiti/Desktop/xlsxfiles/user_data_list.xlsx"
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
 
 
 

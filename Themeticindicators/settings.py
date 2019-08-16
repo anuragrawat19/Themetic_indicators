@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'kpi',
     'farmers',
     'import_export',
+    
 ]
 
 MIDDLEWARE_CLASSES = [

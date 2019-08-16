@@ -6,13 +6,16 @@ from .models import (
     Themetics,
     FinancialYears,
     IndicatorTargets,
-    IndicatorTargetAchievements,Urban)
+    IndicatorTargetAchievements,
+    Urban,
+    Userslist)
 
 # Register your models here.
 admin.site.register(Indicators)
 admin.site.register(Themetics)
 admin.site.register(FinancialYears)
 admin.site.register(IndicatorTargets)
+admin.site.register(Userslist)
 
 @admin.register(IndicatorTargetAchievements)
 class ViewAdmin(ImportExportModelAdmin):
